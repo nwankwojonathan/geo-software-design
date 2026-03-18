@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>InSAR Research Portfolio</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+
+    <style>
+      /* Custom map styling */
+      #map {
+        height: 500px;
+        width: 100%;
+        z-index: 10;
+        border-radius: 0.5rem;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-slate-50 text-gray-800 font-sans antialiased flex flex-col min-h-screen"
+  >
+    <header class="bg-slate-900 text-white p-6 shadow-md sticky top-0 z-50">
+      <div class="max-w-5xl mx-auto flex justify-between items-center">
+        <h1 class="text-xl md:text-2xl font-bold tracking-wide">
+          Geographic Software Design
+        </h1>
+        <nav>
+          <ul class="flex space-x-6 text-sm md:text-base font-medium">
+            <li>
+              <a href="#about" class="hover:text-blue-400 transition-colors"
+                >About</a
+              >
+            </li>
+            <li>
+              <a href="#research" class="hover:text-blue-400 transition-colors"
+                >Research</a
+              >
+            </li>
+            <li>
+              <a
+                href="#interactive-map"
+                class="hover:text-blue-400 transition-colors"
+                >Study Area</a
+              >
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto p-6 mt-10 flex-grow">
+      <section id="about" class="mb-20 text-center animate-fade-in">
+        <h2
+          class="text-4xl md:text-5xl font-extrabold text-slate-800 mb-6 tracking-tight"
+        >
+          Remote Sensing & InSAR Analysis
+        </h2>
+        <p
+          class="text-lg md:text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto"
+        >
+          Exploring earth surface dynamics through advanced satellite imagery to
+          monitor critical infrastructure and environmental changes.
+        </p>
+      </section>
+
+      <section
+        id="research"
+        class="bg-white p-8 md:p-10 rounded-xl shadow-sm border border-gray-200 mb-20"
+      >
+        <h3 class="text-2xl font-bold text-slate-800 mb-4 border-b pb-3">
+          Current Research Focus
+        </h3>
+        <p class="text-gray-700 mb-8 leading-relaxed text-lg">
+          My primary research involves processing Sentinel-1 SAR data to monitor
+          millimeter-level surface displacements. By applying the Stanford
+          Method for Persistent Scatterers (StaMPS/MTI), I analyze complex
+          time-series data to detect ground subsidence and measure subtle
+          structural shifts.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div
+            class="bg-slate-50 p-6 rounded-lg border-l-4 border-blue-600 hover:shadow-md transition-shadow"
+          >
+            <h4 class="text-xl font-bold text-slate-800 mb-3">
+              Dam Deformation Monitoring
+            </h4>
+            <p class="text-gray-600 leading-relaxed">
+              Evaluating the structural integrity of critical dam infrastructure
+              by interpreting persistent scatterer interferometry over extended
+              temporal baselines.
+            </p>
+          </div>
+          <div
+            class="bg-slate-50 p-6 rounded-lg border-l-4 border-blue-600 hover:shadow-md transition-shadow"
+          >
+            <h4 class="text-xl font-bold text-slate-800 mb-3">
+              StaMPS/MTI Processing
+            </h4>
+            <p class="text-gray-600 leading-relaxed">
+              Utilizing robust MATLAB/Octave workflows to unwrap phase data,
+              filter noise, and extract highly reliable deformation signals from
+              SAR acquisitions.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="interactive-map" class="mb-20">
+        <h3 class="text-2xl font-bold text-slate-800 mb-4">
+          Interactive Study Area: Mosul Dam Simulation
+        </h3>
+        <p class="text-gray-600 mb-6">
+          Below is a high-density, interactive simulation of Persistent
+          Scatterer (PS) data points across the Mosul Dam wall.
+          <span class="font-semibold text-red-600">Red/Orange</span> indicates
+          severe subsidence in the center structure,
+          <span class="font-semibold text-green-500">Green</span> indicates
+          stable ground, and
+          <span class="font-semibold text-blue-500">Blue</span> represents
+          uplift or noise.
+          <i
+            >(Click on individual points to view simulated millimeter-level
+            displacements).</i
+          >
+        </p>
+
+        <div class="shadow-lg border border-gray-300">
+          <div id="map"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer
+      id="contact"
+      class="bg-slate-900 text-slate-400 text-center p-8 mt-auto"
+    >
+      <p class="mb-2 text-white font-medium">
+        Geographic Software Design | Week 4 Assignment
+      </p>
+      <p class="text-sm">
+        &copy; 2026 Jonathan Chibueze Nwankwo. All rights reserved.
+      </p>
+    </footer>
+
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <script>
+      // Initialize the map, centered on Mosul Dam
+      var map = L.map("map").setView([36.63, 42.822], 15);
+
+      // Load Esri World Imagery for high-resolution satellite background
+      L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        {
+          attribution:
+            "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
+        },
+      ).addTo(map);
+
+      // PROCEDURAL GENERATION OF DENSE PS POINTS
+      // We will generate 800 simulated points across the dam wall
+      var numPoints = 800;
+
+      // Approximate start and end coordinates of the dam wall
+      var latStart = 36.6335,
+        lngStart = 42.812;
+      var latEnd = 36.6275,
+        lngEnd = 42.834;
+
+      for (var i = 0; i < numPoints; i++) {
+        // Pick a random position (t) along the line between start and end
+        var t = Math.random();
+
+        // Add a slight random noise so they scatter across the width of the dam
+        var latNoise = (Math.random() - 0.5) * 0.0018;
+        var lngNoise = (Math.random() - 0.5) * 0.0018;
+
+        var pointLat = latStart + t * (latEnd - latStart) + latNoise;
+        var pointLng = lngStart + t * (lngEnd - lngStart) + lngNoise;
+
+        // Determine color and deformation based on how close the point is to the center of the dam
+        var distanceToCenter = Math.abs(t - 0.45); // Assuming highest deformation slightly off-center
+        var color, deformValue;
+
+        if (distanceToCenter < 0.2) {
+          color = "#dc2626"; // Red (High Subsidence)
+          deformValue = -(Math.random() * 5 + 15).toFixed(1); // -15 to -20 mm/yr
+        } else if (distanceToCenter < 0.35) {
+          color = "#f97316"; // Orange (Moderate Subsidence)
+          deformValue = -(Math.random() * 8 + 5).toFixed(1); // -5 to -13 mm/yr
+        } else if (distanceToCenter < 0.45) {
+          color = "#84cc16"; // Green (Stable)
+          deformValue = (Math.random() * 2 - 1).toFixed(1); // -1 to +1 mm/yr
+        } else {
+          color = "#3b82f6"; // Blue (Uplift/Noise)
+          deformValue = (Math.random() * 3 + 1).toFixed(1); // +1 to +4 mm/yr
+        }
+
+        // Create the circle marker and add it to the map
+        L.circleMarker([pointLat, pointLng], {
+          color: color,
+          fillColor: color,
+          fillOpacity: 0.8,
+          weight: 0, // Removes the border for a cleaner point-cloud look
+          radius: 3.5, // Smaller radius for higher density look
+        })
+          .addTo(map)
+          .bindPopup(`<b>Displacement Rate:</b><br>${deformValue} mm/yr`);
+      }
+    </script>
+  </body>
+</html>
